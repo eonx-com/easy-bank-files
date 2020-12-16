@@ -46,11 +46,6 @@ final class ResultsContext implements ResultsContextInterface
     private $groups = [];
 
     /**
-     * @var bool
-     */
-    private $isBai = false;
-
-    /**
      * @var \EonX\EasyBankFiles\Parsers\Nai\Results\Transaction[]
      */
     private $transactions = [];
@@ -66,13 +61,12 @@ final class ResultsContext implements ResultsContextInterface
      */
     public function __construct(array $accounts, array $errors, array $file, array $groups, array $transactions)
     {
-        // Not proud of that, but the order matters, DO NOT change it...
         $this
-            ->initTransactions($transactions)
             ->initAccounts($accounts)
             ->initErrors($errors)
             ->initFile($file)
-            ->initGroups($groups);
+            ->initGroups($groups)
+            ->initTransactions($transactions);
     }
 
     public function getAccount(int $index): ?Account
@@ -227,8 +221,6 @@ final class ResultsContext implements ResultsContextInterface
 
         // Remove CustomerReferenceNumber for BAI because always empty
         if (\strtolower($lineArray[3] ?? '') === 'z') {
-            $this->isBai = true;
-
             unset($lineArray[5]);
             // Reset array keys
             $lineArray = \array_values($lineArray);
@@ -402,14 +394,13 @@ final class ResultsContext implements ResultsContextInterface
      */
     private function initFileTrailer(array $trailer): ?FileTrailer
     {
-        $attributes = ['code', 'fileControlTotalA', 'numberOfGroups', 'numberOfRecords'];
-
-        // No fileControlTotalB in BAI files
-        if ($this->isBai === false) {
-            $attributes[] = 'fileControlTotalB';
-        }
-
-        return $this->instantiateSimpleItem($attributes, FileTrailer::class, $trailer);
+        return $this->instantiateSimpleItem([
+            'code',
+            'fileControlTotalA',
+            'numberOfGroups',
+            'numberOfRecords',
+            'fileControlTotalB',
+        ], FileTrailer::class, $trailer);
     }
 
     /**
