@@ -1,0 +1,31 @@
+{
+    "name": "eonx-com/easy-bank-files",
+    "description": "Parsers/Generators for common bank files",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^7.2",
+        "nette/utils": "^3.1",
+        "eonx-com/easy-error-handler": "^3.1",
+        "monolog/monolog": "^2.1"
+    },
+    "require-dev": {
+        "mockery/mockery": "^1.2",
+        "phpunit/phpunit": "^8.4 || ^9.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "EonX\\EasyBankFiles\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "EonX\\EasyBankFiles\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "3.1-dev"
+        }
+    }
+}
